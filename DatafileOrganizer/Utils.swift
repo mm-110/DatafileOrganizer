@@ -11,9 +11,13 @@ func runPythonScript(scriptName: String, arguments: [String] = []){
     let process = Process()
     
     let currentDirectoryURL = URL(fileURLWithPath: FileManager.default.currentDirectoryPath)
-    let scriptURL = currentDirectoryURL.appendingPathComponent(scriptName)
+    let scriptURL = Bundle.main.url(forResource: scriptName, withExtension: "py")
+    guard let scriptPath = scriptURL?.path else {
+        print("Invalid")
+        return
+    }
     process.executableURL = URL(fileURLWithPath: "/usr/bin/env")
-    process.arguments = ["python3"] + arguments
+    process.arguments = ["python3", scriptPath] + arguments
     
     let pipe = Pipe()
     process.standardOutput = pipe

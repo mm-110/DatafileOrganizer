@@ -42,13 +42,14 @@ struct ContentView: View {
 
             }
             
-            //Button(action: {
-            //    runPythonScript(scriptName: "mgmt_folder.py", arguments: [selectedFolderPath, "_", "0"])
-            //}) {
-            //    Text("RUN")
-            //        .frame(width:140, height: 40)
-            //}
-            //.padding()
+            Button(action: {
+                let fileURL = Bundle.main.url(forResource: "mgmt_folder", withExtension: "py")
+                runPythonScript(scriptName: "mgmt_folder", arguments: [selectedFolderPath, "_", "0"])
+            }) {
+                Text("RUN")
+                 .frame(width:140, height: 40)
+            }
+            .padding()
             
             Button(action: {
                 listFilesInCurrentDirectory()
