@@ -1,7 +1,7 @@
 import Foundation
 
 @discardableResult
-func shell(_ command: String) -> String? {
+func shellCommand(_ command: String) -> String? {
     let process = Process()
     let pipe = Pipe()
     
@@ -14,6 +14,31 @@ func shell(_ command: String) -> String? {
     do {
         try process.run()
 //        process.waitUntilExit()  // Aspetta la terminazione del processo
+        
+        let data = pipe.fileHandleForReading.readDataToEndOfFile()
+        let output = String(data: data, encoding: .utf8)
+        return output
+        
+    } catch {
+        print("Error: \(error.localizedDescription)")
+        return nil
+    }
+}
+
+@discardableResult
+func shellCommandAndWait(_ command: String) -> String? {
+    let process = Process()
+    let pipe = Pipe()
+    
+    process.standardOutput = pipe
+    process.standardError = pipe
+    process.arguments = ["-c", command]
+    process.launchPath = "/bin/zsh"
+    process.standardInput = nil
+    
+    do {
+        try process.run()
+        process.waitUntilExit()  // Aspetta la terminazione del processo
         
         let data = pipe.fileHandleForReading.readDataToEndOfFile()
         let output = String(data: data, encoding: .utf8)
@@ -66,7 +91,7 @@ func runPythonScript(scriptName: String, arguments: [String] = []) {
     print(command)
     
     // Esegui il comando e stampa l'output
-    if let output = shell(command) {
+    if let output = shellCommand(command) {
         print(output)
     } else {
         print("Error executing shell command")

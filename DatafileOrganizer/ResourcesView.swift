@@ -18,8 +18,8 @@ struct ResourcesView: View {
                 }
                 let repoName = "/tools"
                 let localRepoPath = resourcesURL.path + repoName
-                print(shell("git clone https://github.com/mm-110/datafiles-management-toolkit.git \(localRepoPath) " ))
-                print(shell("ls \(resourcesURL.path)"))
+                print(shellCommand("git clone https://github.com/mm-110/datafiles-management-toolkit.git \(localRepoPath) " ))
+                print(shellCommand("ls \(resourcesURL.path)"))
             }) {
                 Text("Run")
             }
