@@ -8,18 +8,21 @@
 import SwiftUI
 
 struct ResourcesView: View {
-    @State private var selectedProgramPath: String = ""
+    // @State private var selectedProgramPath: String = ""
     var body: some View {
-        Text(selectedProgramPath)
-        Button(action: load) {
-            Text("Load")
-        }
-    }
-    
-    func load() {
-        if let filelocation = Bundle.main.url(forResource: "mgmt_folder", withExtension: "py") {
-            selectedProgramPath = filelocation.path()
-        }
+        VStack {
+            Button (action: {
+                if let output = shell("/Library/Frameworks/Python.framework/Versions/3.11/bin/python3 --version") {
+                    print(output)
+                } else {
+                    print("Error ")
+                }
+                    
+            }) {
+                Text("Exec")
+            }
+        }.frame(maxWidth: .infinity, maxHeight: .infinity)
+        
     }
 }
 

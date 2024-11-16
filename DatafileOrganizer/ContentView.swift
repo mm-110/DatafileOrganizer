@@ -43,7 +43,6 @@ struct ContentView: View {
             }
             
             Button(action: {
-                let fileURL = Bundle.main.url(forResource: "mgmt_folder", withExtension: "py")
                 runPythonScript(scriptName: "mgmt_folder", arguments: [selectedFolderPath, "_", "0"])
             }) {
                 Text("RUN")
