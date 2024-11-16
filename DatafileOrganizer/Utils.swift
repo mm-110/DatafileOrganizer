@@ -71,14 +71,6 @@ func shell(_ command: String, in directory: URL) -> String? {
         return nil
     }
 }
-    
-func gitPullInResources() {
-    guard let resourcesURL = Bundle.main.resourceURL else {
-        print("Could not find resources URL")
-        return
-    }
-    let command = "git pull"
-}
 
 func runPythonScript(scriptName: String, arguments: [String] = []) {
     guard let scriptURL = Bundle.main.url(forResource: scriptName, withExtension: "py") else {
