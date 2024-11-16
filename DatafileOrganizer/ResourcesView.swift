@@ -11,15 +11,17 @@ struct ResourcesView: View {
     // @State private var selectedProgramPath: String = ""
     var body: some View {
         VStack {
-            Button (action: {
-                if let output = shell("/Library/Frameworks/Python.framework/Versions/3.11/bin/python3 --version") {
-                    print(output)
-                } else {
-                    print("Error ")
+            Button(action: {
+                guard let resourcesURL = Bundle.main.resourceURL else {
+                    print("Could not find resources URL")
+                    return
                 }
-                    
+                let repoName = "/tools"
+                let localRepoPath = resourcesURL.path + repoName
+                print(shell("git clone https://github.com/mm-110/datafiles-management-toolkit.git \(localRepoPath) " ))
+                print(shell("ls \(resourcesURL.path)"))
             }) {
-                Text("Exec")
+                Text("Run")
             }
         }.frame(maxWidth: .infinity, maxHeight: .infinity)
         

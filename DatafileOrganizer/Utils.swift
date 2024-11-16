@@ -25,6 +25,36 @@ func shell(_ command: String) -> String? {
     }
 }
 
+@discardableResult
+func shell(_ command: String, in directory: URL) -> String? {
+    let process = Process()
+    let pipe = Pipe()
+    process.standardOutput = pipe
+    process.standardError = pipe
+    process.arguments = ["-c", command]
+    process.launchPath = "/bin/zsh"
+    process.standardInput = nil
+    process.currentDirectoryURL = directory
+    do {
+        try process.run()
+        //        process.waitUntilExit()
+        let data = pipe.fileHandleForReading.readDataToEndOfFile()
+        let output = String(data: data, encoding: .utf8)
+        return output
+    } catch {
+        print("Error: \(error.localizedDescription)")
+        return nil
+    }
+}
+    
+func gitPullInResources() {
+    guard let resourcesURL = Bundle.main.resourceURL else {
+        print("Could not find resources URL")
+        return
+    }
+    let command = "git pull"
+}
+
 func runPythonScript(scriptName: String, arguments: [String] = []) {
     guard let scriptURL = Bundle.main.url(forResource: scriptName, withExtension: "py") else {
         print("Invalid script path")
