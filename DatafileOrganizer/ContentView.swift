@@ -43,7 +43,7 @@ struct ContentView: View {
             }
             
             Button(action: {
-                runPythonScript(scriptName: "mgmt_folder", arguments: [selectedFolderPath, "_", "0"])
+//                runPythonScript(scriptName: "mgmt_folder", arguments: [selectedFolderPath, "_", "0"])
             }) {
                 Text("RUN")
                  .frame(width:140, height: 40)
