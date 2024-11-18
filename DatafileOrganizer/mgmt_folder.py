@@ -50,19 +50,25 @@ def organize_folder(folderpath: str, sep: str, index: str):
         return False
 
     print("Folder organized successfully")
-    return True
+    
+def main():
 
-if __name__ == "__main__":
-    if len(sys.argv) < 4:
+    if len(sys.argv) < 2:
         print("Usage: python script.py <folderpath> <separator> <index>")
         sys.exit(1)
 
     folder_path = sys.argv[1]
-    sep = sys.argv[2]
-    index = sys.argv[3]
+    sep = "_" # sys.argv[2]
+    index = 0 # sys.argv[3]
 
     success = organize_folder(folderpath=folder_path, sep=sep, index=index)
     if success:
         print("Script completed successfully")
     else:
         print("Script encountered errors")
+
+    return 0
+
+
+if __name__ == "__main__":
+    main()

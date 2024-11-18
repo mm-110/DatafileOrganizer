@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ToolsView: View {
     let toolsDirName: String = "tools"
+    @State private var toolsFullPath: String = ""
     @State private var selectedTool = ""
     @State private var tools: [String] = []
     let iconDimesion: CGFloat = CGFloat(80)
@@ -32,47 +33,67 @@ struct ToolsView: View {
                         Text(tool)
                             .tag(tool)
                     }
+                    
                 }
                 .pickerStyle(MenuPickerStyle())
                 .padding()
-            }
-            HStack {
-                Button(action: {
-                    isDocumentPickerPresented = true
-                }) {
-                    Text("Select Folder")
+                .onChange(of: selectedTool) {
+                    toolsFullPath = toolsFullPath + "/" + selectedTool
+                    print(toolsFullPath)
                 }
+                HStack {
+                    Button(action: {
+                        isDocumentPickerPresented = true
+                    }) {
+                        Text("Select Folder")
+                    }
+                    .fileImporter(
+                        isPresented: $isDocumentPickerPresented,
+                        allowedContentTypes: [.folder],
+                        allowsMultipleSelection: false,
+                        onCompletion: { result in
+                            do {
+                                let selectedFolder = try result.get().first
+                                selectedFolderPath = selectedFolder?.path ?? ""
+                            } catch {
+                                print("Errore durante la selezione della cartella: \(error.localizedDescription)")
+                            }
+                        }
+                    )
+                    
+                    TextField("Percorso della cartella", text: $selectedFolderPath)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .padding()
+                }
+                .padding(.horizontal, 10)
                 
-                TextField("Percorso della cartella", text: $selectedFolderPath)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding()
-            }
-            .padding(.horizontal)
-            
-            Button(action: {
-                // Azione del pulsante Clone
-            }) {
-                Text("Run")
-                    .frame(width: 150, height: 20)
-                    .padding()
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(8)
-            }
-            .buttonStyle(PlainButtonStyle())
+                Button(action: {
+                    // Azione del pulsante Clone
+                    print(shellCommand("python3 \(toolsFullPath) \(selectedFolderPath)"))
+                }) {
+                    Text("Run")
+                        .frame(width: 150, height: 20)
+                        .padding()
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
+                }
+                .buttonStyle(PlainButtonStyle())
+            } }
+//            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .padding()
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .padding()
-    }
-    
-    func loadTools() {
-        guard let toolsFullPath = getFolderPathFromResources(folderName: toolsDirName) else {
-            print("No tools folder found")
-            return
+        
+        func loadTools() {
+            guard let path = getFolderPathFromResources(folderName: toolsDirName) else {
+                print("No tools folder found")
+                return
+            }
+            tools = listFilesInDirectory(atPath: path)
+            toolsFullPath = path
         }
-        tools = listFilesInDirectory(atPath: toolsFullPath)
-    }
 }
+
 
 //func getFolderPathFromResources(folderName: String) -> String? {
 //    // Implementazione della funzione per ottenere il percorso della cartella dai resources
